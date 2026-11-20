@@ -1,8 +1,9 @@
-# CAS-Agentenprojekt (Google ADK mit Gemini, in Google Colab)
+# CAS-Agentenprojekt (Google ADK über LiteLLM, in Google Colab)
 
-Lernprojekt eines Weiterbildungskurses (CAS, ZHAW). Die Teilnehmenden sind keine
+Lernprojekt im Unterricht (ZHAW). Die Teilnehmenden sind keine
 Software-Entwickler. Ziel ist, Konzepte zu verstehen, nicht produktiven Code zu schreiben.
-Sie arbeiten nur in Google Colab, mit Gemini als Code-Assistent (nicht Claude Code).
+Sie arbeiten nur in Google Colab, mit Gemini als Code-Assistent.
+Die Sprachmodelle der Agenten kommen über einen OpenAI-kompatiblen Anbieter (OpenRouter).
 Diese Datei ist für die Pflege des Repos.
 
 ## Inhalt
@@ -17,7 +18,12 @@ Diese Datei ist für die Pflege des Repos.
 - **So einfach wie möglich.** Keine Hilfsfunktionen, keine Klassen, keine Fehlerbehandlung,
   wenn es nicht nötig ist. Lieber zehn verständliche Zeilen als drei clevere.
 - Texte, Kommentare und Instruktionen **auf Deutsch**, kurz. Jeder neue Begriff bekommt eine Erklärung.
-- Modell: `model="gemini-3.5-flash"` (direkt als Text, ohne LiteLlm).
+- Modell immer über LiteLlm mit den Variablen aus den Secrets:
+  `LiteLlm(model="openai/" + MODEL, api_base=BASE_URL, api_key=API_KEY)`.
+  `openai/` = OpenAI-kompatibler Anbieter (z.B. OpenRouter). Das Secret `MODEL` enthält nur
+  die Modell-ID des Anbieters, ohne `openai/`. Anderes Modell für einen einzelnen Agenten:
+  `MODEL` durch einen Text ersetzen. Keine Modellnamen fest in den Code schreiben.
+- Keine Gemini-only-Tools wie `google_search` (gehen über LiteLLM nicht).
 - Jedes Notebook ist eigenständig: Installation, Key, Code, Frage. Keine Dateien im Repo nötig.
 - Agenten laufen in Zellen: `runner = InMemoryRunner(agent=root_agent)` und
   `await runner.run_debug("...", verbose=True)` (zeigt Tool-Aufrufe). Kein `adk web`.
@@ -28,13 +34,13 @@ Diese Datei ist für die Pflege des Repos.
 - Klassische Klassen (`LoopAgent` usw.) statt `Workflow`, weil sie zu den Kursfolien passen.
   Die Deprecation-Warnung im Notebook erwähnen.
 
-## API-Key
-- Teilnehmende legen in Colab ein Secret `API_KEY` an (Key von Moodle). Das Notebook setzt
-  `os.environ["GOOGLE_API_KEY"] = userdata.get("API_KEY")`.
+## Secrets
+- Teilnehmende legen in Colab drei Secrets an (Werte von Moodle): `BASE_URL`, `API_KEY`, `MODEL`.
+  Das Notebook liest sie mit `userdata.get(...)` in gleichnamige Variablen. Keine Umgebungsvariablen.
 - Die lokale `.env` niemals lesen, ausgeben oder ändern.
 
 ## Lokal testen (nur für die Pflege)
-- `.venv` im Projektordner mit `google-adk` (2.15 getestet). Unter Windows fehlt die
+- `.venv` im Projektordner mit `google-adk` (2.15 getestet) und `litellm`. Unter Windows fehlt die
   Zeitzonen-Datenbank (`pip install tzdata`), Colab hat sie.
 - Tests ohne API-Key mit einem Fake-Modell (Unterklasse von `BaseLlm`). Testskripte nicht
   im Projektordner ausführen, damit keine `.env` automatisch geladen wird.

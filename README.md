@@ -14,9 +14,12 @@ Am besten zuerst den Zeitansage_Agent.
 
 1. Oben auf **In Colab öffnen** klicken.
 2. **Datei → Kopie in Drive speichern.** Sonst gehen deine Änderungen verloren.
-3. Links auf das **Schlüssel-Symbol** (Secrets) klicken und ein Secret anlegen:
-   Name `API_KEY`, Wert = der Key von Moodle. **Notebook-Zugriff** einschalten.
+3. Links auf das **Schlüssel-Symbol** (Secrets) klicken und drei Secrets anlegen,
+   die Werte findest du auf Moodle. Bei allen **Notebook-Zugriff** einschalten.
+   - `BASE_URL`: Adresse des Anbieters
+   - `API_KEY`: dein Zugangsschlüssel
+   - `MODEL`: das Standard-Modell
 4. Die Zellen von oben nach unten ausführen (Play-Knopf links an jeder Zelle).
 
 Wenn du nach einer Pause weitermachst, hat Colab alles vergessen. Dann einfach wieder
-oben beginnen. Das Secret bleibt gespeichert.
+oben beginnen. Die Secrets bleiben gespeichert.
