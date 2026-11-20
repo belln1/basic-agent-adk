@@ -25,8 +25,11 @@ Diese Datei ist für die Pflege des Repos.
   `MODEL` durch einen Text ersetzen. Keine Modellnamen fest in den Code schreiben.
 - Keine Gemini-only-Tools wie `google_search` (gehen über LiteLLM nicht).
 - Jedes Notebook ist eigenständig: Installation, Key, Code, Frage. Keine Dateien im Repo nötig.
-- Agenten laufen in Zellen: `runner = InMemoryRunner(agent=root_agent)` und
-  `await runner.run_debug("...", verbose=True)` (zeigt Tool-Aufrufe). Kein `adk web`.
+- Agenten laufen in Zellen, kein `adk web`. Ausgabe in drei Zellen getrennt:
+  1. `ereignisse = await runner.run_debug("...")` ohne `verbose`: zeigt nur die Texte der Agenten.
+     Zuweisen ist wichtig, sonst zeigt Colab die lange Event-Liste als Rückgabewert an.
+  2. Schleife über `ereignisse`, druckt nur `function_call` und `function_response`.
+  3. `ereignisse` allein: alle Details (Modell, Tokens, `state_delta`).
   State lesen: `runner.session_service.get_session(app_name=runner.app_name,
   user_id="debug_user_id", session_id="debug_session_id")`.
 - Nach einer Codeänderung müssen alle Zellen darunter neu ausgeführt werden
